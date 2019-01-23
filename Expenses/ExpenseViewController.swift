@@ -23,6 +23,10 @@ class ExpenseViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.rowHeight = 75
+        
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone.current
         dateFormatter.locale = Locale.current
@@ -33,12 +37,7 @@ class ExpenseViewController: UITableViewController {
             Expense(title: "Office Supplies", amount: 59.34, date: dateFormatter.date(from: "May 30, 2018 12:17")),
             Expense(title: "Uber", amount: 16.23, date: dateFormatter.date(from: "May 30, 2018 11:43")),
             Expense(title: "Coffee", amount: 3.95, date: dateFormatter.date(from: "May 29, 2018 8:45"))]
-
-        // Do any additional setup after loading the view.
-        
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        
+    
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -54,22 +53,20 @@ class ExpenseViewController: UITableViewController {
 
         let dateFormatter = DateFormatter()
         
+        dateFormatter.timeStyle = .medium
+        dateFormatter.dateStyle = .medium
+        
+        let expense = expenses[indexPath.row]
+        
         if let cell = cell as? ExpensesCell {
-            cell.titleLabel.text = expenses[indexPath.row].title
-            cell.amountLabel.text = "$" + String(expenses[indexPath.row].amount)
-            cell.dateLabel.text = dateFormatter.string(from: expenses[indexPath.row].date!)
+            cell.titleLabel.text = expense.title
+            cell.amountLabel.text = "$" + String(expense.amount)
+            if let date = expense.date {
+                cell.dateLabel?.text = dateFormatter.string(from: date)
+            }
+            
         }
         
         return cell
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
     }
 }
